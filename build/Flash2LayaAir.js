@@ -628,16 +628,16 @@ var annie;
                         }
                     }
                     s._isNeedUpdateChildren = false;
-                    s._childChanged();
                     //update一定要放在事件处理之前
                     var len = lastFrameChildren.length;
                     for (i = 0; i < len; i++) {
                         if (!lastFrameChildren[i]._parent) {
                             lastFrameChildren[i].parent = null;
-                            annie.MovieClip._onInitF2xMc(s);
+                            annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                         }
                     }
                     s._childs.push(s.floatView);
+                    s._childChanged();
                     _super.prototype.render.call(this, context, x, y);
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {
@@ -2658,3 +2658,9 @@ var Flash2x;
     }
     Flash2x.m = m;
 })(Flash2x || (Flash2x = {}));
+/**
+ * 全局事件侦听
+ * @property globalDispatcher
+ * @type {laya.events.EventDispatcher}
+ */
+var globalDispatcher = new laya.events.EventDispatcher();

@@ -10,6 +10,7 @@ var coreList =[
     "LayaAir/LayaAir.d.ts",
     "LayaAir/display/MovieClip.ts",
     "LayaAir/display/Shape.ts",
+    "LayaAir/display/Sprite.ts",
     "LayaAir/media/Media.ts",
     "LayaAir/media/Sound.ts",
     "LayaAir/media/Video.ts",

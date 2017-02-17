@@ -13,7 +13,6 @@ namespace annie {
      */
     export class Shape {
         private static _canvas = document.createElement("canvas");
-
         public constructor() {
 
         }

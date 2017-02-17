@@ -605,3 +605,11 @@ namespace Flash2x {
         masked.mask=mask;
     }
 }
+/**
+ * 全局事件侦听
+ * @property globalDispatcher
+ * @type {laya.events.EventDispatcher}
+ */
+let globalDispatcher:laya.events.EventDispatcher=new laya.events.EventDispatcher();
+import F2xContainer=annie.Sprite;
+import F2xMovieClip=annie.MovieClip;

@@ -279,9 +279,9 @@ namespace annie {
             //将mc设置成按钮形式
             if(s.totalFrames>1) {
                 s.gotoAndStop(1);
-                s.on(Event.MOUSE_DOWN,s,this._mouseEvent.bind(this));
-                s.on(Event.MOUSE_UP,s,this._mouseEvent.bind(this));
-                s.on(Event.MOUSE_OUT,s,this._mouseEvent.bind(this));
+                s.on(Event.MOUSE_DOWN,s,s._mouseEvent.bind(s));
+                s.on(Event.MOUSE_UP,s,s._mouseEvent.bind(s));
+                s.on(Event.MOUSE_OUT,s,s._mouseEvent.bind(s));
             }
         }
         private _mouseEvent=function (e:MouseEvent):void {
@@ -625,16 +625,16 @@ namespace annie {
                         }
                     }
                     s._isNeedUpdateChildren = false;
-                    s._childChanged();
                     //update一定要放在事件处理之前
                     let len = lastFrameChildren.length;
                     for (i = 0; i < len; i++) {
                         if (!lastFrameChildren[i]._parent) {
                             lastFrameChildren[i].parent = null;
-                            annie.MovieClip._onInitF2xMc(s);
+                            annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                         }
                     }
                     s._childs.push(s.floatView);
+                    s._childChanged();
                     super.render(context,x,y);
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {

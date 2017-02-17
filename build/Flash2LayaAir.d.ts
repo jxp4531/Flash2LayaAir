@@ -946,3 +946,9 @@ declare namespace Flash2x {
     function jsonp(url: string, type: number, callbackName: string, callbackFun: any): void;
     function m(masked: Sprite, mask: Sprite): void;
 }
+/**
+ * 全局事件侦听
+ * @property globalDispatcher
+ * @type {laya.events.EventDispatcher}
+ */
+declare let globalDispatcher: laya.events.EventDispatcher;
