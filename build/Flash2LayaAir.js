@@ -280,9 +280,9 @@ var annie;
             //将mc设置成按钮形式
             if (s.totalFrames > 1) {
                 s.gotoAndStop(1);
-                s.on(Event.MOUSE_DOWN, s, this._mouseEvent.bind(this));
-                s.on(Event.MOUSE_UP, s, this._mouseEvent.bind(this));
-                s.on(Event.MOUSE_OUT, s, this._mouseEvent.bind(this));
+                s.on(Event.MOUSE_DOWN, s, s._mouseEvent.bind(s));
+                s.on(Event.MOUSE_UP, s, s._mouseEvent.bind(s));
+                s.on(Event.MOUSE_OUT, s, s._mouseEvent.bind(s));
             }
         };
         //setLabelFrame;
@@ -499,7 +499,8 @@ var annie;
          * @public
          * @since 1.0.0
          */
-        MovieClip.prototype.render = function (context, x, y) {
+        MovieClip.prototype.render = function (context, x, y, isMask) {
+            if (isMask === void 0) { isMask = false; }
             var s = this;
             if (s.visible) {
                 if (s._graphicInfo) {
@@ -566,6 +567,7 @@ var annie;
                     for (i = 0; i < s._childs.length - 1; i++) {
                         lastFrameChildren[i]._parent = null;
                     }
+                    s.removeChildren();
                     s._childs = [];
                     for (i = 0; i < layerCount; i++) {
                         frameCount = s._timeline[i].length;
@@ -596,6 +598,14 @@ var annie;
                                 displayObject.skewX = infoObject.skewX;
                                 displayObject.skewY = infoObject.skewY;
                                 displayObject.alpha = infoObject.alpha;
+                                if (displayObject.mask) {
+                                    displayObject.mask.gotoAndStop(s.currentFrame);
+                                    displayObject.mask.render(context, x, y, true);
+                                    if (displayObject.mask._childs[0]) {
+                                        displayObject.mask._childs[0].x -= displayObject.x;
+                                        displayObject.mask._childs[0].y -= displayObject.y;
+                                    }
+                                }
                                 if (infoObject.filters) {
                                     displayObject.filters = infoObject.filters;
                                 }
@@ -617,13 +627,7 @@ var annie;
                                         }
                                     }
                                 }
-                                s._childs.push(displayObject);
-                                if (lastFrameChildren.indexOf(displayObject) < 0) {
-                                    displayObject.parent = s;
-                                }
-                                else {
-                                    displayObject._parent = s;
-                                }
+                                s.addChild(displayObject);
                             }
                         }
                     }
@@ -632,13 +636,13 @@ var annie;
                     var len = lastFrameChildren.length;
                     for (i = 0; i < len; i++) {
                         if (!lastFrameChildren[i]._parent) {
-                            lastFrameChildren[i].parent = null;
                             annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                         }
                     }
-                    s._childs.push(s.floatView);
-                    s._childChanged();
-                    _super.prototype.render.call(this, context, x, y);
+                    if (!isMask) {
+                        s.addChild(s.floatView);
+                        _super.prototype.render.call(this, context, x, y);
+                    }
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {
                         if (s.hasListener("onEndFrame")) {
@@ -662,7 +666,9 @@ var annie;
                     }
                 }
                 else {
-                    _super.prototype.render.call(this, context, x, y);
+                    if (!isMask) {
+                        _super.prototype.render.call(this, context, x, y);
+                    }
                 }
             }
         };
@@ -744,12 +750,18 @@ var annie;
              * @param {Array} ratios 一组范围比例值
              * @param {Array} points 一组点
              * @param {number} lineWidth
+             * @param {string} cap 线头的形状 butt round square 默认 butt
+             * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+             * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
              * @public
              * @since 1.0.0
              */
-            this.beginRadialGradientStroke = function (colors, ratios, points, lineWidth) {
+            this.beginRadialGradientStroke = function (colors, ratios, points, lineWidth, cap, join, miter) {
                 if (lineWidth === void 0) { lineWidth = 1; }
-                this._stroke(Shape.getGradientColor(colors, ratios, points), lineWidth);
+                if (cap === void 0) { cap = "butt"; }
+                if (join === void 0) { join = "miter"; }
+                if (miter === void 0) { miter = 10; }
+                this._stroke(Shape.getGradientColor(colors, ratios, points), lineWidth, cap, join, miter);
             };
             /**
              * 解析一段路径 一般给Flash2x用
@@ -1158,14 +1170,17 @@ var annie;
         /**
          * 给线条着色
          * @method beginStroke
-         * @param {string} color
-         * @param {number} lineWidth
+         * @param {string} color  颜色值
+         * @param {number} lineWidth 宽度
          * @public
          * @since 1.0.0
          */
-        Shape.prototype.beginStroke = function (color, lineWidth) {
+        Shape.prototype.beginStroke = function (color, lineWidth, cap, join, miter) {
             if (lineWidth === void 0) { lineWidth = 1; }
-            this._stroke(color, lineWidth);
+            if (cap === void 0) { cap = ""; }
+            if (join === void 0) { join = ""; }
+            if (miter === void 0) { miter = 0; }
+            this._stroke(color, lineWidth, cap, join, miter);
         };
         /**
          * 画线性渐变的线条 一般给Flash2x用
@@ -1174,12 +1189,18 @@ var annie;
          * @param {Array} ratios 一组范围比例值
          * @param {Array} points 一组点
          * @param {number} lineWidth
+         * @param {string} cap 线头的形状 butt round square 默认 butt
+         * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+         * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
          * @public
          * @since 1.0.0
          */
-        Shape.prototype.beginLinearGradientStroke = function (colors, ratios, points, lineWidth) {
+        Shape.prototype.beginLinearGradientStroke = function (colors, ratios, points, lineWidth, cap, join, miter) {
             if (lineWidth === void 0) { lineWidth = 1; }
-            this._stroke(Shape.getGradientColor(colors, ratios, points), lineWidth);
+            if (cap === void 0) { cap = "butt"; }
+            if (join === void 0) { join = "miter"; }
+            if (miter === void 0) { miter = 10; }
+            this._stroke(Shape.getGradientColor(colors, ratios, points), lineWidth, cap, join, miter);
         };
         /**
          * 线条位图填充 一般给Flash2x用
@@ -1187,20 +1208,29 @@ var annie;
          * @param {Image} image
          * @param {annie.Matrix} matrix
          * @param {number} lineWidth
+         * @param {string} cap 线头的形状 butt round square 默认 butt
+         * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+         * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
          * @public
          * @since 1.0.0
          */
-        Shape.prototype.beginBitmapStroke = function (image, matrix, lineWidth) {
+        Shape.prototype.beginBitmapStroke = function (image, matrix, lineWidth, cap, join, miter) {
             if (lineWidth === void 0) { lineWidth = 1; }
+            if (cap === void 0) { cap = "butt"; }
+            if (join === void 0) { join = "miter"; }
+            if (miter === void 0) { miter = 10; }
             var s = this;
             if (matrix) {
                 s._isBitmapStroke = matrix;
             }
-            s._stroke(Shape.getBitmapStyle(image), lineWidth);
+            s._stroke(Shape.getBitmapStyle(image), lineWidth, cap, join, miter);
         };
-        Shape.prototype._stroke = function (strokeStyle, width) {
+        Shape.prototype._stroke = function (strokeStyle, width, cap, join, miter) {
             var c = this._command;
             c.push([0, "lineWidth", width]);
+            c.push([0, "lineCap", cap]);
+            c.push([0, "lineJoin", join]);
+            c.push([0, "miterLimit", miter]);
             c.push([0, "strokeStyle", strokeStyle]);
             c.push([1, "beginPath", []]);
         };
@@ -2063,7 +2093,11 @@ var Flash2x;
     var URLLoader = annie.URLLoader;
     var Event = laya.events.Event;
     var Texture = laya.resource.Texture;
+    // import ColorFilter=laya.filters.ColorFilter;
     var Sprite = laya.display.Sprite;
+    // import Bitmap=laya.resource.Texture;
+    // import BlurFilter=laya.filters.BlurFilter;
+    // import ShadowFilter=laya.filters.GlowFilter;
     // import ColorMatrixFilter=laya.filters.ColorFilter;
     var _isReleased = false;
     /**
@@ -2556,16 +2590,16 @@ var Flash2x;
         }
         if (strokeObj) {
             if (strokeObj.type == 0) {
-                shape.beginStroke(strokeObj.color, strokeObj.lineWidth);
+                shape.beginStroke(strokeObj.color, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             }
             else if (strokeObj.type == 1) {
-                shape.beginRadialGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth);
+                shape.beginRadialGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             }
             else if (strokeObj.type == 2) {
-                shape.beginLinearGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth);
+                shape.beginLinearGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             }
             else {
-                shape.beginBitmapStroke(sb(strokeObj.bitmapScene, strokeObj.bitmapName), strokeObj.matrix, strokeObj.lineWidth);
+                shape.beginBitmapStroke(sb(strokeObj.bitmapScene, strokeObj.bitmapName), strokeObj.matrix, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             }
         }
         if (pathObj.type == 0) {
@@ -2664,3 +2698,5 @@ var Flash2x;
  * @type {laya.events.EventDispatcher}
  */
 var globalDispatcher = new laya.events.EventDispatcher();
+var F2xContainer = laya.display.Sprite;
+var F2xMovieClip = annie.MovieClip;

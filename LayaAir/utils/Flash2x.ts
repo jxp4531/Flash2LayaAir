@@ -7,12 +7,12 @@ namespace Flash2x {
     import URLLoader = annie.URLLoader;
     import Event = laya.events.Event;
     import Texture=laya.resource.Texture;
-    import ColorFilter=laya.filters.ColorFilter;
+    // import ColorFilter=laya.filters.ColorFilter;
     import Sprite=laya.display.Sprite;
     import Shape=annie.Shape;
-    import Bitmap=laya.resource.Texture;
-    import BlurFilter=laya.filters.BlurFilter;
-    import ShadowFilter=laya.filters.GlowFilter;
+    // import Bitmap=laya.resource.Texture;
+    // import BlurFilter=laya.filters.BlurFilter;
+    // import ShadowFilter=laya.filters.GlowFilter;
     // import ColorMatrixFilter=laya.filters.ColorFilter;
     let _isReleased:boolean=false;
     /**
@@ -512,13 +512,13 @@ namespace Flash2x {
         }
         if (strokeObj) {
             if (strokeObj.type == 0) {
-                shape.beginStroke(strokeObj.color, strokeObj.lineWidth);
+                shape.beginStroke(strokeObj.color, strokeObj.lineWidth,strokeObj.caps, strokeObj.joints, strokeObj.miter);
             } else if (strokeObj.type == 1) {
-                shape.beginRadialGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth);
+                shape.beginRadialGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             } else if (strokeObj.type == 2) {
-                shape.beginLinearGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth);
+                shape.beginLinearGradientStroke(strokeObj.gradient[0], strokeObj.gradient[1], strokeObj.points, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             } else {
-                shape.beginBitmapStroke(sb(strokeObj.bitmapScene, strokeObj.bitmapName), strokeObj.matrix, strokeObj.lineWidth);
+                shape.beginBitmapStroke(sb(strokeObj.bitmapScene, strokeObj.bitmapName), strokeObj.matrix, strokeObj.lineWidth, strokeObj.caps, strokeObj.joints, strokeObj.miter);
             }
         }
         if (pathObj.type == 0) {
@@ -611,5 +611,5 @@ namespace Flash2x {
  * @type {laya.events.EventDispatcher}
  */
 let globalDispatcher:laya.events.EventDispatcher=new laya.events.EventDispatcher();
-import F2xContainer=annie.Sprite;
+import F2xContainer=laya.display.Sprite;
 import F2xMovieClip=annie.MovieClip;

@@ -504,7 +504,7 @@ namespace annie {
          * @public
          * @since 1.0.0
          */
-         public render(context:laya.renders.RenderContext, x:number, y:number):void {
+         public render(context:laya.renders.RenderContext, x:number, y:number,isMask:boolean=false):void {
             let s:any = this;
             if(s.visible) {
                 if (s._graphicInfo){
@@ -567,6 +567,7 @@ namespace annie {
                     for (i = 0; i < s._childs.length - 1; i++) {
                         lastFrameChildren[i]._parent = null;
                     }
+                    s.removeChildren();
                     s._childs = [];
                     for (i = 0; i < layerCount; i++) {
                         frameCount = s._timeline[i].length;
@@ -596,6 +597,14 @@ namespace annie {
                                 displayObject.skewX = infoObject.skewX;
                                 displayObject.skewY = infoObject.skewY;
                                 displayObject.alpha = infoObject.alpha;
+                                if(displayObject.mask){
+                                    displayObject.mask.gotoAndStop(s.currentFrame);
+                                    displayObject.mask.render(context,x,y,true);
+                                    if(displayObject.mask._childs[0]) {
+                                        displayObject.mask._childs[0].x -= displayObject.x;
+                                        displayObject.mask._childs[0].y -= displayObject.y;
+                                    }
+                                }
                                 if (infoObject.filters) {
                                     displayObject.filters = infoObject.filters;
                                 } else {
@@ -615,12 +624,7 @@ namespace annie {
                                         }
                                     }
                                 }
-                                s._childs.push(displayObject);
-                                if (lastFrameChildren.indexOf(displayObject) < 0) {
-                                    displayObject.parent = s;
-                                }else{
-                                    displayObject._parent = s;
-                                }
+                                s.addChild(displayObject);
                             }
                         }
                     }
@@ -629,13 +633,13 @@ namespace annie {
                     let len = lastFrameChildren.length;
                     for (i = 0; i < len; i++) {
                         if (!lastFrameChildren[i]._parent) {
-                            lastFrameChildren[i].parent = null;
                             annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                         }
                     }
-                    s._childs.push(s.floatView);
-                    s._childChanged();
-                    super.render(context,x,y);
+                    if(!isMask) {
+                        s.addChild(s.floatView);
+                        super.render(context, x, y);
+                    }
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {
                         if (s.hasListener("onEndFrame")) {
@@ -658,7 +662,9 @@ namespace annie {
                         s._scriptLayer[s.currentFrame - 1]();
                     }
                 } else {
-                    super.render(context,x,y);
+                    if(!isMask) {
+                        super.render(context, x, y);
+                    }
                 }
             }
         }

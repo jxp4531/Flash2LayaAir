@@ -268,7 +268,7 @@ declare namespace annie {
          * @public
          * @since 1.0.0
          */
-        render(context: laya.renders.RenderContext, x: number, y: number): void;
+        render(context: laya.renders.RenderContext, x: number, y: number, isMask?: boolean): void;
         /**
          * 触发显示列表上相关的事件
          * @method _onDispatchBubbledEvent
@@ -535,12 +535,12 @@ declare namespace annie {
         /**
          * 给线条着色
          * @method beginStroke
-         * @param {string} color
-         * @param {number} lineWidth
+         * @param {string} color  颜色值
+         * @param {number} lineWidth 宽度
          * @public
          * @since 1.0.0
          */
-        beginStroke(color: string, lineWidth?: number): void;
+        beginStroke(color: string, lineWidth?: number, cap?: string, join?: string, miter?: number): void;
         /**
          * 画线性渐变的线条 一般给Flash2x用
          * @method beginLinearGradientStroke
@@ -548,10 +548,13 @@ declare namespace annie {
          * @param {Array} ratios 一组范围比例值
          * @param {Array} points 一组点
          * @param {number} lineWidth
+         * @param {string} cap 线头的形状 butt round square 默认 butt
+         * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+         * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
          * @public
          * @since 1.0.0
          */
-        beginLinearGradientStroke(colors: Array<string>, ratios: Array<number>, points: Array<number>, lineWidth?: number): void;
+        beginLinearGradientStroke(colors: Array<string>, ratios: Array<number>, points: Array<number>, lineWidth?: number, cap?: string, join?: string, miter?: number): void;
         /**
          * 画径向渐变的线条 一般给Flash2x用
          * @method beginRadialGradientStroke
@@ -559,21 +562,27 @@ declare namespace annie {
          * @param {Array} ratios 一组范围比例值
          * @param {Array} points 一组点
          * @param {number} lineWidth
+         * @param {string} cap 线头的形状 butt round square 默认 butt
+         * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+         * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
          * @public
          * @since 1.0.0
          */
-        beginRadialGradientStroke: (colors: string[], ratios: number[], points: number[], lineWidth?: number) => void;
+        beginRadialGradientStroke: (colors: string[], ratios: number[], points: number[], lineWidth?: number, cap?: string, join?: string, miter?: number) => void;
         /**
          * 线条位图填充 一般给Flash2x用
          * @method beginBitmapStroke
          * @param {Image} image
          * @param {annie.Matrix} matrix
          * @param {number} lineWidth
+         * @param {string} cap 线头的形状 butt round square 默认 butt
+         * @param {string} join 线与线之间的交接处形状 bevel round miter 默认miter
+         * @param {number} miter 正数,规定最大斜接长度,如果斜接长度超过 miterLimit 的值，边角会以 lineJoin 的 "bevel" 类型来显示 默认10
          * @public
          * @since 1.0.0
          */
-        beginBitmapStroke(image: any, matrix: Matrix, lineWidth?: number): void;
-        private _stroke(strokeStyle, width);
+        beginBitmapStroke(image: any, matrix: Matrix, lineWidth?: number, cap?: string, join?: string, miter?: number): void;
+        private _stroke(strokeStyle, width, cap, join, miter);
         /**
          * 结束填充
          * @method endFill
@@ -952,3 +961,5 @@ declare namespace Flash2x {
  * @type {laya.events.EventDispatcher}
  */
 declare let globalDispatcher: laya.events.EventDispatcher;
+import F2xContainer = laya.display.Sprite;
+import F2xMovieClip = annie.MovieClip;
