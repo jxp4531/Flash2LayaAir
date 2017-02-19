@@ -2698,5 +2698,6 @@ var Flash2x;
  * @type {laya.events.EventDispatcher}
  */
 var globalDispatcher = new laya.events.EventDispatcher();
+window.devicePixelRatio = window.devicePixelRatio || 1;
 var F2xContainer = laya.display.Sprite;
 var F2xMovieClip = annie.MovieClip;
