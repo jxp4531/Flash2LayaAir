@@ -193,12 +193,11 @@ var Flash2x;
             for (var item in JSResItem) {
                 var resItem;
                 if (JSResItem[item].indexOf("audio/") > 0) {
-                    resItem = new Audio();
-                    resItem.src = JSResItem[item];
+                    resItem = new annie.Sound(JSResItem[item]);
                 }
                 else if (JSResItem[item].indexOf("image/") > 0) {
-                    resItem = new Image();
-                    resItem.src = JSResItem[item];
+                    resItem = new Texture();
+                    resItem.load(JSResItem[item]);
                 }
                 else {
                     resItem = JSON.parse(JSResItem[item]);
