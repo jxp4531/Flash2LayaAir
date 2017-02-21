@@ -1008,7 +1008,7 @@ var annie;
             var w = bitmap.width;
             var h = bitmap.height;
             var img = bitmap.bitmap._image;
-            if (w == img.width && h == img.h) {
+            if (w == img.width && h == img.height) {
                 return img;
             }
             var _canvas = Shape._canvas;
