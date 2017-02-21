@@ -925,7 +925,7 @@ declare namespace Flash2x {
      * @param {Object} pathObj
      * @param {Object} fillObj
      * @param {Object} strokeObj
-     * @returns {annie.Shape}
+     * @returns {laya.display.Sprite}
      */
     function s(pathObj: any, fillObj: any, strokeObj: any): Sprite;
     /**

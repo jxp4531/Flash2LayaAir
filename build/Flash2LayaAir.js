@@ -1388,10 +1388,10 @@ var annie;
                     }
                 }
                 if (leftX != undefined) {
-                    leftX -= 20 + lineWidth >> 1;
-                    leftY -= 20 + lineWidth >> 1;
-                    buttonRightX += 20 + lineWidth >> 1;
-                    buttonRightY += 20 + lineWidth >> 1;
+                    leftX -= lineWidth >> 1;
+                    leftY -= lineWidth >> 1;
+                    buttonRightX += lineWidth >> 1;
+                    buttonRightY += lineWidth >> 1;
                     var w = buttonRightX - leftX;
                     var h = buttonRightY - leftY;
                     s.rect.x = leftX;
@@ -1399,8 +1399,6 @@ var annie;
                     s.rect.width = w;
                     s.rect.height = h;
                     ///////////////////////////
-                    s._cacheX = leftX;
-                    s._cacheY = leftY;
                     var _canvas = s._cacheImg;
                     var ctx = _canvas["getContext"]('2d');
                     _canvas.width = w;
@@ -1447,15 +1445,19 @@ var annie;
                 else {
                     s._cacheImg.width = 0;
                     s._cacheImg.height = 0;
-                    s._cacheX = 0;
-                    s._cacheY = 0;
+                    s.rect.x = 0;
+                    s.rect.y = 0;
+                    s.rect.width = 0;
+                    s.rect.height = 0;
                 }
             }
             else {
                 s._cacheImg.width = 0;
                 s._cacheImg.height = 0;
-                s._cacheX = 0;
-                s._cacheY = 0;
+                s.rect.x = 0;
+                s.rect.y = 0;
+                s.rect.width = 0;
+                s.rect.height = 0;
             }
             var texture = new Texture();
             texture.load(s._cacheImg.toDataURL());
@@ -2278,12 +2280,11 @@ var Flash2x;
             for (var item in JSResItem) {
                 var resItem;
                 if (JSResItem[item].indexOf("audio/") > 0) {
-                    resItem = new Audio();
-                    resItem.src = JSResItem[item];
+                    resItem = new annie.Sound(JSResItem[item]);
                 }
                 else if (JSResItem[item].indexOf("image/") > 0) {
-                    resItem = new Image();
-                    resItem.src = JSResItem[item];
+                    resItem = new Texture();
+                    resItem.load(JSResItem[item]);
                 }
                 else {
                     resItem = JSON.parse(JSResItem[item]);
@@ -2420,6 +2421,7 @@ var Flash2x;
                     var imgData = data[imageName];
                     var spriteSheet = s[sceneName]["F2xSSIMG" + m_1];
                     var t_1 = Texture.createFromTexture(spriteSheet, imgData.x, imgData.y, imgData.width, imgData.height);
+                    s[sceneName][imageName] = t_1;
                     if (isTexture)
                         return t_1;
                     sp.graphics.drawTexture(Texture.createFromTexture(spriteSheet, imgData.x, imgData.y, imgData.width, imgData.height));
@@ -2570,7 +2572,7 @@ var Flash2x;
      * @param {Object} pathObj
      * @param {Object} fillObj
      * @param {Object} strokeObj
-     * @returns {annie.Shape}
+     * @returns {laya.display.Sprite}
      */
     function s(pathObj, fillObj, strokeObj) {
         var shape = new annie.Shape();

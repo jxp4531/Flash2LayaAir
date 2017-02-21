@@ -100,8 +100,6 @@ namespace annie {
          * @type {Canvas}
          */
         private _cacheImg: any = window.document.createElement("canvas");
-        private _cacheX: number = 0;
-        private _cacheY: number = 0;
         private _isBitmapStroke: Matrix;
         private _isBitmapFill: Matrix;
         public texture: Texture = new Texture();
@@ -769,10 +767,10 @@ namespace annie {
                     }
                 }
                 if (leftX != undefined) {
-                    leftX -= 20 + lineWidth >> 1;
-                    leftY -= 20 + lineWidth >> 1;
-                    buttonRightX += 20 + lineWidth >> 1;
-                    buttonRightY += 20 + lineWidth >> 1;
+                    leftX -= lineWidth >> 1;
+                    leftY -= lineWidth >> 1;
+                    buttonRightX += lineWidth >> 1;
+                    buttonRightY += lineWidth >> 1;
                     let w = buttonRightX - leftX;
                     let h = buttonRightY - leftY;
                     s.rect.x = leftX;
@@ -780,8 +778,6 @@ namespace annie {
                     s.rect.width = w;
                     s.rect.height = h;
                     ///////////////////////////
-                    s._cacheX = leftX;
-                    s._cacheY = leftY;
                     let _canvas = s._cacheImg;
                     let ctx = _canvas["getContext"]('2d');
                     _canvas.width = w;
@@ -819,18 +815,21 @@ namespace annie {
                             ctx[data[1]] = data[2];
                         }
                     }
-                    //
                 } else {
                     s._cacheImg.width = 0;
                     s._cacheImg.height = 0;
-                    s._cacheX = 0;
-                    s._cacheY = 0;
+                    s.rect.x = 0;
+                    s.rect.y = 0;
+                    s.rect.width = 0;
+                    s.rect.height = 0;
                 }
             } else {
                 s._cacheImg.width = 0;
                 s._cacheImg.height = 0;
-                s._cacheX = 0;
-                s._cacheY = 0;
+                s.rect.x = 0;
+                s.rect.y = 0;
+                s.rect.width = 0;
+                s.rect.height = 0;
             }
             let texture = new Texture();
             texture.load(s._cacheImg.toDataURL());
