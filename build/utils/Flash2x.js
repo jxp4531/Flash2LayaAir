@@ -335,6 +335,7 @@ var Flash2x;
                     var imgData = data[imageName];
                     var spriteSheet = s[sceneName]["F2xSSIMG" + m_1];
                     var t_1 = Texture.createFromTexture(spriteSheet, imgData.x, imgData.y, imgData.width, imgData.height);
+                    s[sceneName][imageName] = t_1;
                     if (isTexture)
                         return t_1;
                     sp.graphics.drawTexture(Texture.createFromTexture(spriteSheet, imgData.x, imgData.y, imgData.width, imgData.height));

@@ -324,6 +324,7 @@ namespace Flash2x {
                     let imgData:any = data[imageName];
                     let spriteSheet = s[sceneName]["F2xSSIMG" + m];
                     let t=Texture.createFromTexture(spriteSheet,imgData.x, imgData.y, imgData.width, imgData.height);
+                    s[sceneName][imageName]=t;
                     if(isTexture)return t;
                     sp.graphics.drawTexture(Texture.createFromTexture(spriteSheet,imgData.x, imgData.y, imgData.width, imgData.height));
                     return sp;
