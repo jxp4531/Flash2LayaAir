@@ -495,7 +495,7 @@ namespace Flash2x {
      * @param {Object} pathObj
      * @param {Object} fillObj
      * @param {Object} strokeObj
-     * @returns {annie.Shape}
+     * @returns {laya.display.Sprite}
      */
     export function s(pathObj: any, fillObj: any, strokeObj: any): Sprite {
         let shape = new annie.Shape();
