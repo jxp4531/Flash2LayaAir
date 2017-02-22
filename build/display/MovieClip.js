@@ -555,6 +555,7 @@ var annie;
                 }
                 s._isUpdateFrame = true;
                 if (s._isNeedUpdateChildren) {
+                    var t = -1;
                     var layerCount = s._timeline.length;
                     var frameCount = 0;
                     var frame = null;
@@ -562,14 +563,12 @@ var annie;
                     var infoObject = null;
                     var frameChildrenCount = 0;
                     var lastFrameChildren = s._childs;
-                    var i = void 0;
                     var frameEvents = [];
-                    for (i = 0; i < s._childs.length - 1; i++) {
+                    for (var i = 0; i < s._childs.length - 1; i++) {
                         lastFrameChildren[i]._parent = null;
                     }
-                    s.removeChildren();
                     s._childs = [];
-                    for (i = 0; i < layerCount; i++) {
+                    for (var i = 0; i < layerCount; i++) {
                         frameCount = s._timeline[i].length;
                         if (s.currentFrame <= frameCount) {
                             frame = s._timeline[i][s.currentFrame - 1];
@@ -627,17 +626,26 @@ var annie;
                                         }
                                     }
                                 }
-                                s.addChild(displayObject);
+                                t = lastFrameChildren.indexOf(displayObject);
+                                if (t < 0) {
+                                    s.addChild(displayObject);
+                                }
+                                else {
+                                    displayObject._parent = s;
+                                    s._childs.push(displayObject);
+                                    lastFrameChildren.splice(t, 1);
+                                }
                             }
                         }
                     }
+                    s._childChanged();
                     s._isNeedUpdateChildren = false;
                     //update一定要放在事件处理之前
                     var len = lastFrameChildren.length;
-                    for (i = 0; i < len; i++) {
-                        if (!lastFrameChildren[i]._parent) {
-                            annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
-                        }
+                    for (var i = 0; i < len; i++) {
+                        lastFrameChildren[i]._parent = s;
+                        lastFrameChildren[i].parent = null;
+                        annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                     }
                     if (!isMask) {
                         s.addChild(s.floatView);
@@ -657,7 +665,7 @@ var annie;
                     }
                     //看看是否有帧事件,有则派发
                     len = frameEvents.length;
-                    for (i = 0; i < len; i++) {
+                    for (var i = 0; i < len; i++) {
                         s.event(frameEvents[i].type, frameEvents[i]);
                     }
                     //看看是否有回调,有则调用

@@ -343,8 +343,6 @@ declare namespace annie {
          * @type {Canvas}
          */
         private _cacheImg;
-        private _cacheX;
-        private _cacheY;
         private _isBitmapStroke;
         private _isBitmapFill;
         texture: Texture;
