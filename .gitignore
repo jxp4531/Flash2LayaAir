@@ -43,3 +43,8 @@ libs
 out
 *.swf
 demo
+.DS_Store
+LayaAir/.DS_Store
+LayaAir/display/.DS_Store
+LayaAir/net/.DS_Store
+LayaAir/utils/.DS_Store
