@@ -644,11 +644,12 @@ var annie;
                     var len = lastFrameChildren.length;
                     for (var i = 0; i < len; i++) {
                         lastFrameChildren[i]._parent = s;
-                        lastFrameChildren[i].parent = null;
+                        s._childs.push(lastFrameChildren[i]);
+                        s.removeChild(lastFrameChildren[i]);
                         annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                     }
                     if (!isMask) {
-                        s.addChild(s.floatView);
+                        s._childs.push(s.floatView);
                         _super.prototype.render.call(this, context, x, y);
                     }
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件

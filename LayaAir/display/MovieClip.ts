@@ -634,19 +634,20 @@ namespace annie {
                             }
                         }
                     }
-                    s._childChanged();
                     s._isNeedUpdateChildren = false;
                     //update一定要放在事件处理之前
                     let len = lastFrameChildren.length;
                     for (let i = 0; i < len; i++) {
                         lastFrameChildren[i]._parent=s;
-                        lastFrameChildren[i].parent=null;
+                        s._childs.push(lastFrameChildren[i]);
+                        s.removeChild(lastFrameChildren[i]);
                         annie.MovieClip._onInitF2xMc(lastFrameChildren[i]);
                     }
                     if(!isMask) {
-                        s.addChild(s.floatView);
+                        s._childs.push(s.floatView);
                         super.render(context, x, y);
                     }
+                    s._childChanged();
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {
                         if (s.hasListener("onEndFrame")) {
