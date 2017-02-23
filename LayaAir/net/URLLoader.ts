@@ -133,27 +133,13 @@ namespace annie {
                                     case "sound":
                                     case "video":
                                         var itemObj: any;
-                                        let isBlob: boolean = true;
                                         if (s.responseType == "sound") {
                                             itemObj = document.createElement("AUDIO");
                                         } else if (s.responseType == "video") {
                                             itemObj = document.createElement("VIDEO");
                                         }
                                         itemObj.preload = true;
-                                        itemObj.load();
-                                        itemObj.onloadeddata = function () {
-                                            if (isBlob) {
-                                                //执行下面的代码android有问题，会闪退
-                                                //URL.revokeObjectURL(item.src);
-                                            }
-                                            itemObj.onloadeddata = null;
-                                        };
-                                        try {
-                                            itemObj.src = URL.createObjectURL(result);
-                                        } catch (err) {
-                                            isBlob = false;
-                                            itemObj.src = s.url;
-                                        }
+                                        itemObj.src = s.url;
                                         if (s.responseType == "sound") {
                                             item = new annie.Sound(itemObj);
                                         } else {

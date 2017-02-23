@@ -229,7 +229,6 @@ var annie;
                                     case "sound":
                                     case "video":
                                         var itemObj;
-                                        var isBlob_1 = true;
                                         if (s.responseType == "sound") {
                                             itemObj = document.createElement("AUDIO");
                                         }
@@ -237,19 +236,7 @@ var annie;
                                             itemObj = document.createElement("VIDEO");
                                         }
                                         itemObj.preload = true;
-                                        itemObj.load();
-                                        itemObj.onloadeddata = function () {
-                                            if (isBlob_1) {
-                                            }
-                                            itemObj.onloadeddata = null;
-                                        };
-                                        try {
-                                            itemObj.src = URL.createObjectURL(result);
-                                        }
-                                        catch (err) {
-                                            isBlob_1 = false;
-                                            itemObj.src = s.url;
-                                        }
+                                        itemObj.src = s.url;
                                         if (s.responseType == "sound") {
                                             item = new annie.Sound(itemObj);
                                         }
