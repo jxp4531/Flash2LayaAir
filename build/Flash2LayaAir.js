@@ -638,7 +638,6 @@ var annie;
                             }
                         }
                     }
-                    s._childChanged();
                     s._isNeedUpdateChildren = false;
                     //update一定要放在事件处理之前
                     var len = lastFrameChildren.length;
@@ -652,6 +651,7 @@ var annie;
                         s._childs.push(s.floatView);
                         _super.prototype.render.call(this, context, x, y);
                     }
+                    s._childChanged();
                     //看看是否到了第一帧，或是最后一帧,如果是准备事件
                     if ((s.currentFrame == 1 && !s.isFront) || (s.currentFrame == s.totalFrames && s.isFront)) {
                         if (s.hasListener("onEndFrame")) {
@@ -1976,33 +1976,16 @@ var annie;
                                     case "sound":
                                     case "video":
                                         var itemObj;
-                                        var isBlob_1 = true;
                                         if (s.responseType == "sound") {
                                             itemObj = document.createElement("AUDIO");
+                                            item = new annie.Sound(itemObj);
                                         }
                                         else if (s.responseType == "video") {
                                             itemObj = document.createElement("VIDEO");
-                                        }
-                                        itemObj.preload = true;
-                                        itemObj.load();
-                                        itemObj.onloadeddata = function () {
-                                            if (isBlob_1) {
-                                            }
-                                            itemObj.onloadeddata = null;
-                                        };
-                                        try {
-                                            itemObj.src = URL.createObjectURL(result);
-                                        }
-                                        catch (err) {
-                                            isBlob_1 = false;
-                                            itemObj.src = s.url;
-                                        }
-                                        if (s.responseType == "sound") {
-                                            item = new annie.Sound(itemObj);
-                                        }
-                                        else {
                                             item = new annie.Video(itemObj);
                                         }
+                                        itemObj.preload = true;
+                                        itemObj.src = s.url;
                                         break;
                                     case "json":
                                         item = JSON.parse(result);

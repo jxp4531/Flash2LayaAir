@@ -135,16 +135,13 @@ namespace annie {
                                         var itemObj: any;
                                         if (s.responseType == "sound") {
                                             itemObj = document.createElement("AUDIO");
+                                            item = new annie.Sound(itemObj);
                                         } else if (s.responseType == "video") {
                                             itemObj = document.createElement("VIDEO");
+                                            item = new annie.Video(itemObj);
                                         }
                                         itemObj.preload = true;
                                         itemObj.src = s.url;
-                                        if (s.responseType == "sound") {
-                                            item = new annie.Sound(itemObj);
-                                        } else {
-                                            item = new annie.Video(itemObj);
-                                        }
                                         break;
                                     case "json":
                                         item = JSON.parse(result);
