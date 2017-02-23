@@ -48,3 +48,7 @@ LayaAir/.DS_Store
 LayaAir/display/.DS_Store
 LayaAir/net/.DS_Store
 LayaAir/utils/.DS_Store
+build/display
+build/media
+build/net
+build/utils
