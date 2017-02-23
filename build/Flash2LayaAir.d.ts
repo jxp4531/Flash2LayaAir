@@ -951,6 +951,7 @@ declare namespace Flash2x {
      */
     function jsonp(url: string, type: number, callbackName: string, callbackFun: any): void;
     function m(masked: Sprite, mask: Sprite): void;
+    let version: string;
 }
 /**
  * 全局事件侦听
@@ -958,5 +959,6 @@ declare namespace Flash2x {
  * @type {laya.events.EventDispatcher}
  */
 declare let globalDispatcher: laya.events.EventDispatcher;
+declare var devicePixelRatio: number;
 import F2xContainer = laya.display.Sprite;
 import F2xMovieClip = annie.MovieClip;

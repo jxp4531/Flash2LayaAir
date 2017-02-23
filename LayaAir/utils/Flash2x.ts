@@ -595,6 +595,7 @@ namespace Flash2x {
         mask.y-=masked.y;
         masked.mask=mask;
     }
+    export let version="1.0.0";
 }
 /**
  * 全局事件侦听
@@ -602,6 +603,6 @@ namespace Flash2x {
  * @type {laya.events.EventDispatcher}
  */
 let globalDispatcher:laya.events.EventDispatcher=new laya.events.EventDispatcher();
-window.devicePixelRatio=window.devicePixelRatio||1;
+var devicePixelRatio=window.devicePixelRatio||1;
 import F2xContainer=laya.display.Sprite;
 import F2xMovieClip=annie.MovieClip;

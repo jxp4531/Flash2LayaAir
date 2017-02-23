@@ -2673,6 +2673,7 @@ var Flash2x;
         masked.mask = mask;
     }
     Flash2x.m = m;
+    Flash2x.version = "1.0.0";
 })(Flash2x || (Flash2x = {}));
 /**
  * 全局事件侦听
@@ -2680,6 +2681,6 @@ var Flash2x;
  * @type {laya.events.EventDispatcher}
  */
 var globalDispatcher = new laya.events.EventDispatcher();
-window.devicePixelRatio = window.devicePixelRatio || 1;
+var devicePixelRatio = window.devicePixelRatio || 1;
 var F2xContainer = laya.display.Sprite;
 var F2xMovieClip = annie.MovieClip;
