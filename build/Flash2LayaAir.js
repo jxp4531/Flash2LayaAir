@@ -2343,18 +2343,8 @@ var Flash2x;
      * @static
      * @since 1.0.2
      * @param {string} sceneName
-     * @param {WebGLRenderingContext} gl 如果是webgl渲染模式，请设置渲染的webgl对象，以方便删除不再需要使用的texture对象
      */
-    function unLoadScene(sceneName, gl) {
-        if (gl === void 0) { gl = null; }
-        //删除webgl贴图资源
-        if (gl) {
-            for (var item in res[sceneName]) {
-                if (res[sceneName][item].nodeName && res[sceneName][item].nodeName == "IMG" && res[sceneName][item].texture) {
-                    gl.deleteTexture(res[sceneName][item].texture);
-                }
-            }
-        }
+    function unLoadScene(sceneName) {
         delete res[sceneName];
         var scene = eval(sceneName);
         for (var i in scene) {
