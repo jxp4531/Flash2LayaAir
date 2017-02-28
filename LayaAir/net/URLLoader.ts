@@ -30,7 +30,7 @@ namespace annie {
             let s = this;
             if (s._req) {
                 s._req.abort();
-                //s._req = null;
+                s._req = null;
             }
         }
 
@@ -75,9 +75,7 @@ namespace annie {
                     s.responseType = "unKnow";
                 }
             }
-            let req: any = null;
-            if (!s._req) {
-                s._req = new XMLHttpRequest();
+            let req: any = new XMLHttpRequest();
                 req = s._req;
                 req.withCredentials = false;
                 req.onprogress = function (event: any): void {
@@ -170,9 +168,7 @@ namespace annie {
                         }
                     }
                 };
-            } else {
-                req = s._req;
-            }
+
             let reSendTimes = 0;
             if (s.data && s.method.toLocaleLowerCase() == "get") {
                 s.url = s._fus(url, s.data);
@@ -210,6 +206,7 @@ namespace annie {
             /*req.onloadstart = function (e) {
              s.event("onStart");
              };*/
+            s._req=req;
         }
 
         /**
