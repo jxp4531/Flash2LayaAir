@@ -33,7 +33,6 @@ namespace annie {
                 s._req = null;
             }
         }
-
         private _req: XMLHttpRequest;
         private headers: Array<string> = [];
 
@@ -76,7 +75,6 @@ namespace annie {
                 }
             }
             let req: any = new XMLHttpRequest();
-                req = s._req;
                 req.withCredentials = false;
                 req.onprogress = function (event: any): void {
                     if (!event || event.loaded > 0 && event.total == 0) {
