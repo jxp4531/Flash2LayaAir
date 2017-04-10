@@ -131,12 +131,17 @@ var annie;
             this._isUpdateFrame = false;
             this._isF2xMc = true;
             this._mouseEvent = function (e) {
+                var s = this;
+                var frame = 2;
                 if (e.type == Event.MOUSE_DOWN) {
-                    this.gotoAndStop(2);
+                    if (s.currentFrame > 2) {
+                        frame = 3;
+                    }
                 }
                 else {
-                    this.gotoAndStop(1);
+                    frame = 1;
                 }
+                s.gotoAndStop(frame);
             };
             var s = this;
             s.addChild(s.floatView);
@@ -1917,7 +1922,6 @@ var annie;
                 }
             }
             var req = new XMLHttpRequest();
-            req = s._req;
             req.withCredentials = false;
             req.onprogress = function (event) {
                 if (!event || event.loaded > 0 && event.total == 0) {

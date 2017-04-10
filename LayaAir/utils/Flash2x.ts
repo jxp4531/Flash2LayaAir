@@ -606,3 +606,4 @@ let globalDispatcher:laya.events.EventDispatcher=new laya.events.EventDispatcher
 var devicePixelRatio=window.devicePixelRatio||1;
 import F2xContainer=laya.display.Sprite;
 import F2xMovieClip=annie.MovieClip;
+import F2xText=laya.display.Text;
