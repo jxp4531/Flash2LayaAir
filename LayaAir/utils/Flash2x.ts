@@ -598,9 +598,11 @@ namespace Flash2x {
     export let version="1.0.1";
     /**
      * 获取参数
+     * @method getQueryString
+     * @static
      * @param name
      * @returns {any}
-     * @since 1.0.9
+     * @since 1.0.1
      */
     export function getQueryString(name:string) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");

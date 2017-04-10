@@ -2673,7 +2673,23 @@ var Flash2x;
         masked.mask = mask;
     }
     Flash2x.m = m;
-    Flash2x.version = "1.0.0";
+    Flash2x.version = "1.0.1";
+    /**
+     * 获取参数
+     * @method getQueryString
+     * @static
+     * @param name
+     * @returns {any}
+     * @since 1.0.1
+     */
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null)
+            return decodeURIComponent(r[2]);
+        return null;
+    }
+    Flash2x.getQueryString = getQueryString;
 })(Flash2x || (Flash2x = {}));
 /**
  * 全局事件侦听
@@ -2684,3 +2700,4 @@ var globalDispatcher = new laya.events.EventDispatcher();
 var devicePixelRatio = window.devicePixelRatio || 1;
 var F2xContainer = laya.display.Sprite;
 var F2xMovieClip = annie.MovieClip;
+var F2xText = laya.display.Text;
