@@ -595,7 +595,18 @@ namespace Flash2x {
         mask.y-=masked.y;
         masked.mask=mask;
     }
-    export let version="1.0.0";
+    export let version="1.0.1";
+    /**
+     * 获取参数
+     * @param name
+     * @returns {any}
+     * @since 1.0.9
+     */
+    export function getQueryString(name:string) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
 }
 /**
  * 全局事件侦听
