@@ -825,6 +825,8 @@ declare namespace annie {
  */
 declare namespace Flash2x {
     import Sprite = laya.display.Sprite;
+    let _isReleased: boolean;
+    let _shareSceneList: any;
     /**
      * 加载一个flash2x转换的文件内容,如果未加载完成继续调用此方法将会刷新加载器,中断未被加载完成的资源!
      * @method loadScene

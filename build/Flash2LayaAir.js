@@ -2091,7 +2091,10 @@ var Flash2x;
     // import BlurFilter=laya.filters.BlurFilter;
     // import ShadowFilter=laya.filters.GlowFilter;
     // import ColorMatrixFilter=laya.filters.ColorFilter;
-    var _isReleased = false;
+    //打包swf用
+    Flash2x._isReleased = false;
+    //打包swf用
+    Flash2x._shareSceneList = [];
     /**
      * 存储加载资源的总对象
      * @type {Object}
@@ -2218,11 +2221,20 @@ var Flash2x;
         _completeCallback = completeFun;
         _progressCallback = progressFun;
         _currentConfig = [];
-        if (!_isReleased) {
+        if (!Flash2x._isReleased) {
             _loadConfig();
         }
         else {
             //加载正式的单个文件
+            //看看是否需要加载共享资源
+            if (Flash2x._shareSceneList.length > 0 && (!isLoadedScene("f2xShare"))) {
+                for (var i = 0; i < _loadSceneNames.length; i++) {
+                    if (Flash2x._shareSceneList.indexOf(_loadSceneNames[i]) >= 0) {
+                        _loadSceneNames.unshift("f2xShare");
+                        break;
+                    }
+                }
+            }
             _loadIndex = 0;
             _totalLoadRes = _loadSceneNames.length;
             _loadSinglePer = 1 / _totalLoadRes;
@@ -2258,30 +2270,38 @@ var Flash2x;
     }
     function _onRESComplete(e) {
         var scene = _loadSceneNames[_loadIndex];
-        if (!_isReleased) {
+        if (!Flash2x._isReleased) {
             if (e.data.type != "js" && e.data.type != "css") {
                 var id = _currentConfig[_loadIndex][0].id;
                 res[scene][id] = e.data.response;
             }
         }
         else {
-            var F2x = Flash2x;
-            var JSResItem = F2x[scene + "Res"];
-            for (var item in JSResItem) {
-                var resItem;
-                if (JSResItem[item].indexOf("audio/") > 0) {
-                    resItem = new annie.Sound(JSResItem[item]);
+            if (scene != "f2xShare") {
+                var F2x = Flash2x;
+                var JSResItem = F2x[scene + "Res"];
+                for (var item in JSResItem) {
+                    var resItem;
+                    if (JSResItem[item].indexOf("audio/") > 0) {
+                        resItem = new annie.Sound(JSResItem[item]);
+                    }
+                    else if (JSResItem[item].indexOf("image/") > 0) {
+                        resItem = new Texture();
+                        resItem.load(JSResItem[item]);
+                    }
+                    else {
+                        resItem = JSON.parse(JSResItem[item]);
+                    }
+                    res[scene][item] = resItem;
                 }
-                else if (JSResItem[item].indexOf("image/") > 0) {
-                    resItem = new Texture();
-                    resItem.load(JSResItem[item]);
-                }
-                else {
-                    resItem = JSON.parse(JSResItem[item]);
-                }
-                res[scene][item] = resItem;
+                delete F2x[scene + "Res"];
             }
-            delete F2x[scene + "Res"];
+            else {
+                _currentConfig.shift();
+                _loadSceneNames.shift();
+                _loadRes();
+                return;
+            }
         }
         _checkComplete();
     }
@@ -2312,9 +2332,9 @@ var Flash2x;
     }
     function _loadRes() {
         var url = _domain + _currentConfig[_loadIndex][0].src;
-        if (_isReleased) {
+        if (Flash2x._isReleased) {
             _loaderQueue.responseType = "js";
-            url += "?v=" + _isReleased;
+            url += "?v=" + Flash2x._isReleased;
         }
         _loaderQueue.load(url);
     }

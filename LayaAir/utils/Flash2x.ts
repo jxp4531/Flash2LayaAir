@@ -14,7 +14,10 @@ namespace Flash2x {
     // import BlurFilter=laya.filters.BlurFilter;
     // import ShadowFilter=laya.filters.GlowFilter;
     // import ColorMatrixFilter=laya.filters.ColorFilter;
-    let _isReleased:boolean=false;
+    //打包swf用
+    export let _isReleased = false;
+    //打包swf用
+    export let _shareSceneList: any = [];
     /**
      * 存储加载资源的总对象
      * @type {Object}
@@ -144,6 +147,15 @@ namespace Flash2x {
             _loadConfig();
         }else{
             //加载正式的单个文件
+            //看看是否需要加载共享资源
+            if (_shareSceneList.length > 0 && (!isLoadedScene("f2xShare"))) {
+                for (let i = 0; i < _loadSceneNames.length; i++) {
+                    if (_shareSceneList.indexOf(_loadSceneNames[i]) >= 0) {
+                        _loadSceneNames.unshift("f2xShare");
+                        break;
+                    }
+                }
+            }
             _loadIndex = 0;
             _totalLoadRes=_loadSceneNames.length;
             _loadSinglePer = 1 / _totalLoadRes;
@@ -185,21 +197,28 @@ namespace Flash2x {
                 res[scene][id] = e.data.response;
             }
         }else{
-            var F2x:any=Flash2x;
-            var JSResItem:any=F2x[scene+"Res"];
-            for(var item in JSResItem){
-                var resItem:any;
-                if(JSResItem[item].indexOf("audio/")>0){
-                    resItem=new annie.Sound(JSResItem[item]);
-                }else if(JSResItem[item].indexOf("image/")>0){
-                    resItem=new Texture();
-                    resItem.load(JSResItem[item]);
-                }else{
-                    resItem=JSON.parse(JSResItem[item]);
+            if (scene != "f2xShare") {
+                var F2x:any=Flash2x;
+                var JSResItem:any=F2x[scene+"Res"];
+                for(var item in JSResItem){
+                    var resItem:any;
+                    if(JSResItem[item].indexOf("audio/")>0){
+                        resItem=new annie.Sound(JSResItem[item]);
+                    }else if(JSResItem[item].indexOf("image/")>0){
+                        resItem=new Texture();
+                        resItem.load(JSResItem[item]);
+                    }else{
+                        resItem=JSON.parse(JSResItem[item]);
+                    }
+                    res[scene][item]=resItem;
                 }
-                res[scene][item]=resItem;
+                delete F2x[scene+"Res"];
+            }else{
+                _currentConfig.shift();
+                _loadSceneNames.shift();
+                _loadRes();
+                return;
             }
-            delete F2x[scene+"Res"];
         }
         _checkComplete();
     }
@@ -620,3 +639,5 @@ var devicePixelRatio=window.devicePixelRatio||1;
 import F2xContainer=laya.display.Sprite;
 import F2xMovieClip=annie.MovieClip;
 import F2xText=laya.display.Text;
+import F2xInputText=laya.display.Text;
+
